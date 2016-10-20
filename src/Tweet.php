@@ -17,14 +17,14 @@ class Tweet{
     private $tweet_text;
     private $tweet_creation_date;
     
-    public function __construct(User $u_id, $tweet_text = "", $tweet_creation_date = ""){
+    public function __construct(User $user, $tweet_text = "", $tweet_creation_date = ""){
         $this->tweet_id = -1;
-        $this->u_id = $u_id;  
+        $this->u_id = setUserId($user->getId());  
         $this->tweet_text = $tweet_text;
         $this->tweet_creation_date = $tweet_creation_date;
     }
     
-    public function setUserId(User $user_id) {
+    public function setUserId($user_id) {
         if(is_integer($user_id) && $user_id > 0){
             $this->u_id = $user_id;
         }
@@ -32,7 +32,7 @@ class Tweet{
     
     public function setText($newText) {
         if(is_string($newText) && strlen($newText) > 0){
-            $this->setText($newText);
+            $this->tweet_text = $newText;
         }
     }
     
@@ -58,7 +58,7 @@ class Tweet{
         return $this->tweet_creation_date;
     }
 
-    public function loadTweetById(mysqli $connection, $tweet_id){
+    static public function loadTweetById(mysqli $connection, $tweet_id){
         $sql = "SELECT * FROM Tweet WHERE tweet_id = $tweet_id";
         
         $result = $connection->query($sql);
@@ -76,8 +76,8 @@ class Tweet{
         return null;
     }
     
-    public function loadAllTweetsByUserId(mysqli $connection){
-        $sql = "SELECT * FROM Tweet WHERE u_id = $this->u_id";
+    static public function loadAllTweetsByUserId(mysqli $connection, User $user){
+        $sql = "SELECT * FROM Tweet WHERE u_id = $user->getId()";
         
         $arr =[];
         
@@ -97,7 +97,7 @@ class Tweet{
         return $arr;
     }
     
-    public function loadAllTweets(mysqli $connection){
+    static public function loadAllTweets(mysqli $connection){
         $sql = "SELECT * FROM Tweet";
         
         $arr =[];
