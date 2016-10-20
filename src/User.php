@@ -5,28 +5,37 @@ CREATE TABLE User (
 user_id INT PRIMARY KEY AUTO_INCREMENT,
 email VARCHAR(30) UNIQUE,
 username VARCHAR(20),
-hashed_password VARCHAR(60),
+hashed_password VARCHAR(100),
 creation_date DATETIME
 ); 
 */
 
 class User {
 
-    private $id;
-    private $username;
-    private $hashedPassword;
+    private $user_id;
     private $email;
+    private $username;
+    private $hashed_password;
+    private $creation_date;
 
     /**
      * User constructor.
      */
-    public function __construct() {
-        $this->id = -1;
-        $this->username = "";
-        $this->email = "";
-        $this->hashedPassword = "";
+    public function __construct($email = "", $username = "", $hashed_password = "", $creation_date = "") {
+        $this->user_id = -1;
+        $this->email = $email;
+        $this->username = $username;
+        $this->hashed_password = $hashed_password;
+        $this->creation_date = $creation_date;
     }
 
+    /**
+    * @param type $newEmail
+    */
+    public function setEmail($newEmail) {
+        $this->email = $newEmail;
+    }
+    
     /**
      * @param type $newUsername
      */
@@ -39,23 +48,30 @@ class User {
      */
     public function setPassword($newPassword) {
         $newHashedPassword = password_hash($newPassword, PASSWORD_BCRYPT);
-        $this->hashedPassword = $newHashedPassword;
+        $this->hashed_password = $newHashedPassword;
     }
-
+    
     /**
-     * @param type $newEmail
+     * @param type $newDate
      */
-    public function setEmail($newEmail) {
-        $this->email = $newEmail;
+    public function setDate($newDate) {
+        $this->creation_date = $newDate;
     }
 
     /**
      * @return type
      */
     public function getId() {
-        return $this->id;
+        return $this->user_id;
     }
-
+    
+    /**
+    * @return type
+    */
+    public function getEmail() {
+        return $this->email;
+    }
+    
     /**
      * @return type
      */
@@ -67,32 +83,33 @@ class User {
      * @return type
      */
     public function getHashedPassword() {
-        return $this->hashedPassword;
+        return $this->hashed_password;
     }
-
+    
     /**
      * @return type
      */
-    public function getEmail() {
-        return $this->email;
+    public function getDate(){
+        return $this->creation_date;
     }
 
     public function saveToDB(mysqli $connection) {
         if ($this->id == -1) {
             //Saving new user to DB
 
-            $sql = "INSERT INTO Users(username, email, hashed_password)
-            VALUES ('$this->username', '$this->email', '$this->hashedPassword')";
+            $sql = "INSERT INTO User(email, username, hashed_password, creation_date)
+            VALUES ('$this->email', '$this->username', '$this->hashed_password', '$this->creation_date')";
 
             $result = $connection->query($sql);
 
             if ($result == true) {
-                $this->id = $connection->insert_id;
+                $this->user_id = $connection->insert_id;
                 return true;
             }
         }else{
-            $sql = "UPDATE Users SET username='$this->username', email='$this->email', "
-                 . "hashed_password='$this->hashedPassword' WHERE id=$this->id";
+            $sql = "UPDATE User SET email='$this->email', username='$this->username', "
+                 . "hashed_password='$this->hashed_password', creation_date='$this->creation_date' "
+                 . "WHERE user_id=$this->user_id";
             $result = $connection->query($sql);
             if($result == true){              
                 return true;
@@ -108,17 +125,18 @@ class User {
      * @return \User
      */
     static public function loadUserById(mysqli $connection, $id){
-        $sql = "SELECT * FROM Users WHERE id=$id";
+        $sql = "SELECT * FROM User WHERE user_id=$id";
         
         $result = $connection->query($sql);
         
         if($result == true && $result->num_rows == 1){
             $row = $result->fetch_assoc();
             $loadedUser = new User();
-            $loadedUser->id = $row['id'];
-            $loadedUser->username = $row['username'];
-            $loadedUser->hashedPassword = $row['hashed_password'];
+            $loadedUser->user_id = $row['id'];
             $loadedUser->email = $row['email'];
+            $loadedUser->username = $row['username'];
+            $loadedUser->hashed_password = $row['hashed_password'];
+            $loadedUser->creation_date = $row['creation_date'];
             return $loadedUser;
         }
         return null;
@@ -129,30 +147,31 @@ class User {
      * @return \User
      */
     static public function loadAllUsers(mysqli $connection){
-        $sql = "SELECT * FROM Users";
+        $sql = "SELECT * FROM User";
         $ret = [];
 
         $result = $connection->query($sql);
         if($result == true && $result->num_rows != 0){
             foreach($result as $row){
                 $loadedUser = new User();
-                $loadedUser->id = $row['id'];
-                $loadedUser->username = $row['username'];
-                $loadedUser->hashedPassword = $row['hashed_password'];
+                $loadedUser->user_id = $row['id'];
                 $loadedUser->email = $row['email'];
+                $loadedUser->username = $row['username'];
+                $loadedUser->hashed_password = $row['hashed_password'];
+                $loadedUser->creation_date = $row['creation_date'];
 
                 $ret[] = $loadedUser;
-        }
+            }
         }
         return $ret;
     }
     
     public function delete(mysqli $connection){
-        if($this->id != -1){
-            $sql = "DELETE FROM Users WHERE id=$this->id";
+        if($this->user_id != -1){
+            $sql = "DELETE FROM User WHERE user_id=$this->user_id";
             $result = $connection->query($sql);
             if($result == true){
-                $this->id = -1;
+                $this->user_id = -1;
                 return true;
             }
             return false;

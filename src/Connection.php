@@ -3,7 +3,7 @@
 $servername = 'localhost';
 $username = 'root';
 $password = 'CodersLab';
-$basename = 'coderslab_twitter';
+$basename = 'twitter';
 
 $conn = new mysqli($servername, $username, $password, $basename);
  
