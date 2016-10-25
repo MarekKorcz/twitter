@@ -94,7 +94,7 @@ class User {
     }
 
     public function saveToDB(mysqli $connection) {
-        if ($this->id == -1) {
+        if ($this->user_id == -1) {
             //Saving new user to DB
 
             $sql = "INSERT INTO User(email, username, hashed_password, creation_date)
@@ -119,6 +119,38 @@ class User {
        
     }
     
+    
+    public function delete(mysqli $connection){
+        if($this->user_id != -1){
+            $sql = "DELETE FROM User WHERE user_id=$this->user_id";
+            $result = $connection->query($sql);
+            if($result == true){
+                $this->user_id = -1;
+                return true;
+            }
+            return false;
+        }
+        return true;
+    }
+    
+    static public function loadUserByEmailAndPassword(mysqli $connection, $email, $pass){
+        $sql = "SELECT * FROM User WHERE email=$email AND hashed_password=$pass";
+        
+        $result = $connection->query($sql);
+        
+        if($result == true && $result->num_rows == 1){
+            $row = $result->fetch_assoc();
+            $loadedUser = new User();
+            $loadedUser->user_id = $row['user_id'];
+            $loadedUser->email = $row['email'];
+            $loadedUser->username = $row['username'];
+            $loadedUser->hashed_password = $row['hashed_password'];
+            $loadedUser->creation_date = $row['creation_date'];
+            return $loadedUser;
+        }
+        return null;
+    }
+    
     /**
      * @param mysqli $connection
      * @param type $id
@@ -132,7 +164,7 @@ class User {
         if($result == true && $result->num_rows == 1){
             $row = $result->fetch_assoc();
             $loadedUser = new User();
-            $loadedUser->user_id = $row['id'];
+            $loadedUser->user_id = $row['user_id'];
             $loadedUser->email = $row['email'];
             $loadedUser->username = $row['username'];
             $loadedUser->hashed_password = $row['hashed_password'];
@@ -154,7 +186,7 @@ class User {
         if($result == true && $result->num_rows != 0){
             foreach($result as $row){
                 $loadedUser = new User();
-                $loadedUser->user_id = $row['id'];
+                $loadedUser->user_id = $row['user_id'];
                 $loadedUser->email = $row['email'];
                 $loadedUser->username = $row['username'];
                 $loadedUser->hashed_password = $row['hashed_password'];
@@ -165,19 +197,5 @@ class User {
         }
         return $ret;
     }
-    
-    public function delete(mysqli $connection){
-        if($this->user_id != -1){
-            $sql = "DELETE FROM User WHERE user_id=$this->user_id";
-            $result = $connection->query($sql);
-            if($result == true){
-                $this->user_id = -1;
-                return true;
-            }
-            return false;
-        }
-        return true;
-    }
-
 }
  

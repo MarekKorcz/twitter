@@ -58,66 +58,6 @@ class Tweet{
         return $this->tweet_creation_date;
     }
 
-    static public function loadTweetById(mysqli $connection, $tweet_id){
-        $sql = "SELECT * FROM Tweet WHERE tweet_id = $tweet_id";
-        
-        $result = $connection->query($sql);
-        
-        if($result == true && $result->num_rows == 0){
-            $row = $result->fetch_assoc();
-            $loadedTweet = new Tweet();
-            $loadedTweet->tweet_id = $row['tweet_id'];
-            $loadedTweet->u_id = $row['u_id'];
-            $loadedTweet->tweet_text = $row['tweet_text'];
-            $loadedTweet->tweet_creation_date = $row['tweet_creation_date'];
-            
-            return $loadedTweet;
-        }
-        return null;
-    }
-    
-    static public function loadAllTweetsByUserId(mysqli $connection, User $user){
-        $sql = "SELECT * FROM Tweet WHERE u_id = $user->getId()";
-        
-        $arr =[];
-        
-        $result = $connection->query($sql);
-        
-        if($result == true && $result != 0){
-            foreach($result as $row){
-                $loadedTweet = new Tweet();
-                $loadedTweet->tweet_id = $row['tweet_id'];
-                $loadedTweet->u_id = $row['u_id'];
-                $loadedTweet->tweet_text = $row['tweet_text'];
-                $loadedTweet->tweet_creation_date = $row['tweet_creation_date'];
-                
-                $arr = $loadedTweet;
-            }
-        }
-        return $arr;
-    }
-    
-    static public function loadAllTweets(mysqli $connection){
-        $sql = "SELECT * FROM Tweet";
-        
-        $arr =[];
-        
-        $result = $connection->query($sql);
-        
-        if($result == true && $result != 0){
-            foreach($result as $row){
-                $loadedTweet = new Tweet();
-                $loadedTweet->tweet_id = $row['tweet_id'];
-                $loadedTweet->u_id = $row['u_id'];
-                $loadedTweet->tweet_text = $row['tweet_text'];
-                $loadedTweet->tweet_creation_date = $row['tweet_creation_date'];
-                
-                $arr = $loadedTweet;
-            }
-        }
-        return $arr;
-    }
-    
     public function saveToDB(mysqli $connection){
         if($this->tweet_id == -1){
             $sql = "INSERT INTO Tweet (u_id, tweet_text, tweet_creation_date) "
@@ -141,4 +81,70 @@ class Tweet{
         return false;
     }
     
+    static public function loadAllTweets(mysqli $connection){
+        $sql = "SELECT * FROM Tweet";
+        
+        $arr =[];
+        
+        $result = $connection->query($sql);
+        
+        if($result == true && $result->num_rows != 0){
+            foreach($result as $row){
+                $loadedTweet = new Tweet();
+                $loadedTweet->tweet_id = $row['tweet_id'];
+                $loadedTweet->u_id = $row['u_id'];
+                $loadedTweet->tweet_text = $row['tweet_text'];
+                $loadedTweet->tweet_creation_date = $row['tweet_creation_date'];
+                
+                $arr = $loadedTweet;
+            }
+        }else{
+                echo "Brak Tweet'ow w bazie danych!";
+        }
+        
+        return $arr;
+    }    
+    
+    static public function loadTweetById(mysqli $connection, $tweet_id){
+        $sql = "SELECT * FROM Tweet WHERE tweet_id = $tweet_id";
+        
+        $result = $connection->query($sql);
+        
+        if($result == true && $result->num_rows == 0){
+            $row = $result->fetch_assoc();
+            $loadedTweet = new Tweet();
+            $loadedTweet->tweet_id = $row['tweet_id'];
+            $loadedTweet->u_id = $row['u_id'];
+            $loadedTweet->tweet_text = $row['tweet_text'];
+            $loadedTweet->tweet_creation_date = $row['tweet_creation_date'];
+            
+            return $loadedTweet;
+        }else{
+            echo "Brak Tweet'ow o podanym id!";
+        }
+        return null;
+    }
+    
+    static public function loadAllTweetsByUserId(mysqli $connection, User $user){
+        $sql = "SELECT * FROM Tweet WHERE u_id = $user->getId()";
+        
+        $arr =[];
+        
+        $result = $connection->query($sql);
+        
+        if($result == true && $result != 0){
+            foreach($result as $row){
+                $loadedTweet = new Tweet();
+                $loadedTweet->tweet_id = $row['tweet_id'];
+                $loadedTweet->u_id = $row['u_id'];
+                $loadedTweet->tweet_text = $row['tweet_text'];
+                $loadedTweet->tweet_creation_date = $row['tweet_creation_date'];
+                
+                $arr = $loadedTweet;
+            }
+        }else{
+            echo "Brak Tweet'ow nalezacych do danego User'a";
+        }
+        return $arr;
+    }
 }
