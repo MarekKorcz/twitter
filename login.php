@@ -37,7 +37,7 @@
                     require_once 'require_components/warnings.php';
                 ?>                
                 
-                <form action="#" method="post">
+                <form action="#" method="POST">
                    <h3>Zaloguj sie do Twitter'a!</h3>
 
                    <label><b>Podaj email:</b></label><br>

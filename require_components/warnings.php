@@ -12,5 +12,6 @@ if(isset($_SESSION['about_reminder'])){
     echo $_SESSION['about_reminder'];
     unset($_SESSION['about_reminder']);
     }
-    
+   
 ?>
+

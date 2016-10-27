@@ -4,6 +4,7 @@
 CREATE TABLE Tweet (
 tweet_id INT PRIMARY KEY AUTO_INCREMENT,
 u_id INT NOT NULL,
+u_name VARCHAR(20),
 tweet_text VARCHAR(140),
 tweet_creation_date DATETIME,
 FOREIGN KEY(u_id) REFERENCES User(user_id)
@@ -14,20 +15,16 @@ ON DELETE CASCADE
 class Tweet{
     private $tweet_id;
     private $u_id;
+    private $u_name;
     private $tweet_text;
     private $tweet_creation_date;
     
     public function __construct(User $user, $tweet_text = "", $tweet_creation_date = ""){
         $this->tweet_id = -1;
-        $this->u_id = setUserId($user->getId());  
+        $this->u_id = $user->getId();
+        $this->u_name = $user->getUsername();
         $this->tweet_text = $tweet_text;
         $this->tweet_creation_date = $tweet_creation_date;
-    }
-    
-    public function setUserId($user_id) {
-        if(is_integer($user_id) && $user_id > 0){
-            $this->u_id = $user_id;
-        }
     }
     
     public function setText($newText) {
@@ -50,6 +47,10 @@ class Tweet{
         return $this->u_id;
     }
     
+    public function getUserName(){
+        return $this->u_name;
+    }
+    
     public function getText(){
         return $this->tweet_text;
     }
@@ -60,8 +61,8 @@ class Tweet{
 
     public function saveToDB(mysqli $connection){
         if($this->tweet_id == -1){
-            $sql = "INSERT INTO Tweet (u_id, tweet_text, tweet_creation_date) "
-                 . "VALUES ('$this->u_id', '$this->tweet_text', '$this->tweet_creation_date')";
+            $sql = "INSERT INTO Tweet (u_id, u_name, tweet_text, tweet_creation_date) "
+                 . "VALUES ('$this->u_id', '$this->u_name','$this->tweet_text', '$this->tweet_creation_date')";
             
             $result = $connection->query($sql);
             
@@ -81,6 +82,41 @@ class Tweet{
         return false;
     }
     
+    
+    static public function displayTweets(mysqli $conn){
+        
+        // wczytuje wszystkie tweet'y z bazy
+        $arr = Tweet::loadAllTweets($conn);
+        
+        $length = strlen($arr);
+        
+        for($i = 0; $i < $length; $i++){
+            
+            // wyswietlam wszystkie tweet'y po kolei
+            Tweet::tweetBlockHTML($arr[$i]);
+        }
+        return true;  
+    }
+
+
+    static public function tweetBlockHTML(Tweet $tweet){
+
+        // przypisuje wlasciwosci obiektu do zmiennych
+        $tweet_id = $tweet->getTweetId();
+        $u_name = $tweet->getUserName();
+        $tweet_text = $tweet->getText();
+        $tweet_date = $tweet->getDate();
+
+        // wyswietlam tweet'a
+        echo "<div name=\"$tweet_id\" style=\"width: 900px; height: 80px; "
+           . "background-color: green; border: 5px solid black;\">";
+        echo "<strong>Tweet&nbsp;uzytkownika:</strong>&nbsp;$u_name<br>";
+        echo "<strong>Tresc&nbsp;tweet'u:</strong>&nbsp;$tweet_text<br>";
+        echo "<strong>Data&nbsp;stworzenia tweet'u:</strong>&nbsp;$tweet_date";
+        echo "</div><br>";
+
+    }
+    
     static public function loadAllTweets(mysqli $connection){
         $sql = "SELECT * FROM Tweet";
         
@@ -90,9 +126,10 @@ class Tweet{
         
         if($result == true && $result->num_rows != 0){
             foreach($result as $row){
-                $loadedTweet = new Tweet();
+                $loadedTweet = new Tweet(User::__construct());
                 $loadedTweet->tweet_id = $row['tweet_id'];
                 $loadedTweet->u_id = $row['u_id'];
+                $loadedTweet->u_name = $row['u_name'];
                 $loadedTweet->tweet_text = $row['tweet_text'];
                 $loadedTweet->tweet_creation_date = $row['tweet_creation_date'];
                 
@@ -115,6 +152,7 @@ class Tweet{
             $loadedTweet = new Tweet();
             $loadedTweet->tweet_id = $row['tweet_id'];
             $loadedTweet->u_id = $row['u_id'];
+            $loadedTweet->u_name = $row['u_name'];
             $loadedTweet->tweet_text = $row['tweet_text'];
             $loadedTweet->tweet_creation_date = $row['tweet_creation_date'];
             
@@ -137,6 +175,7 @@ class Tweet{
                 $loadedTweet = new Tweet();
                 $loadedTweet->tweet_id = $row['tweet_id'];
                 $loadedTweet->u_id = $row['u_id'];
+                $loadedTweet->u_name = $row['u_name'];
                 $loadedTweet->tweet_text = $row['tweet_text'];
                 $loadedTweet->tweet_creation_date = $row['tweet_creation_date'];
                 

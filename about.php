@@ -40,9 +40,28 @@
                 ?>
             </div>
             <div id="main_content">
-                
-                Cos o Userze juz wkrotce!! 
-                
+                <?php
+                    
+                    // dodaje skrypt obslugujacy wyswietlanie danych user'a 
+                    // oraz obslugi zmiany hasla.
+                    require_once'require_components/about_process.php';
+                ?>
+                <form method="post" action="#">
+                    <h3>Zmien haslo!</h3>
+                    Podaj stare haslo:<br>
+                    <input type="password" name="oldPass"/><br>
+                    Podaj nowe haslo:<br>
+                    <input type="password" name="newPass1"/><br>
+                    Powtorz nowe haslo:<br>
+                    <input type="password" name="newPass2"/><br><br>
+                    <input type="submit" name="submit" value="Zatwierdz"/><br><br>
+                </form>
+                <?php
+                    if(isset($_POST['changedPass'])){
+                        echo $_POST['changedPass'];
+                        unset($_POST['changedPass']);
+                    }
+                ?>
             </div>
             <div id="footer">
                 To by bylo na tyle. Kopi rajt oł rajt.

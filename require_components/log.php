@@ -32,11 +32,8 @@ if($_SERVER['REQUEST_METHOD'] == "POST" && isset($_POST['submit'])){
                                  . "Blad logowania</label>";
         }else{
             
-            // hash'uje haslo zeby porownac je z hash'em z bazy danych
-            $hashed_pass = password_hash($user_password, PASSWORD_DEFAULT);
-            
             // wywoluje statyczna metode klasy User w celu wczytania user'a z bazy danych
-            $user = User::loadUserByEmailAndPassword($conn, $user_email, $hashed_pass);
+            $user = User::loadUserByEmailAndPassword($conn, $user_email, $user_password);
             
             // sprawdzam czy logowanie powiodlo sie
             if($user){

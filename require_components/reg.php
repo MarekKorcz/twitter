@@ -55,7 +55,7 @@ if($_SERVER['REQUEST_METHOD'] == "POST" && isset($_POST['submit'])){
             $hashed_pass = password_hash($user_password, PASSWORD_DEFAULT);
             
             // przypisuje date do zmiennej
-            $date = date("Y-m-d h:i:sa");
+            $date = date("Y-m-d h:i:s");
             
             // tworze obiekt klasy User
             $user = new User($user_email, $user_name, $hashed_pass, $date);

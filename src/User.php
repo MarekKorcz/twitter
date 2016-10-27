@@ -134,7 +134,7 @@ class User {
     }
     
     static public function loadUserByEmailAndPassword(mysqli $connection, $email, $pass){
-        $sql = "SELECT * FROM User WHERE email=$email AND hashed_password=$pass";
+        $sql = "SELECT * FROM User WHERE email=$email";
         
         $result = $connection->query($sql);
         
@@ -146,7 +146,12 @@ class User {
             $loadedUser->username = $row['username'];
             $loadedUser->hashed_password = $row['hashed_password'];
             $loadedUser->creation_date = $row['creation_date'];
-            return $loadedUser;
+            
+            if(password_verify($pass, $loadedUser->getHashedPassword())){
+                return $loadedUser;
+            }else{
+                return null;
+            }
         }
         return null;
     }

@@ -32,7 +32,7 @@
             </div>
             <div id="main_content">
                       
-                    <form action="#" method="post">
+                    <form action="#" method="POST">
                         <h3>Zarejestruj sie do Twitter'a!</h3>
                         <label><b>Podaj imie:</b></label><br>
                         <input type="text" placeholder="Wpisz imie" name="name">

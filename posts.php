@@ -4,8 +4,9 @@
     if(!isset($_SESSION['isLogged']) && !isset($_SESSION['userId'])){
         // dodaje zmienna wyswietlajaca komunikat w login.php w razie 
         // gdyby wszedl tu ktos niezalogowany
-        $_SESSION['index_reminder'] = "<label style=\"color: red;\">"
-           . "Zanim wyswietlisz Tweety, zaloguj się lub zarejestruj !</label>";
+        $_SESSION['message_reminder'] = "<label style=\"color: red;\">"
+          . "Nie mozesz wyswietlic swoich postow poniewaz nie jestes "
+          . "zalogowany !</label>";
         
         // przekierowanie do login.php i zakonczenie dzialania skryptu
         header("Location: login.php");
@@ -13,11 +14,10 @@
     }
     
     // podlaczone klasy z folderu 'src' 
-    require_once 'src/Connection.php'; 
+    require_once 'src/Connection.php';
     require_once 'src/User.php';
     require_once 'src/Tweet.php';
-    require_once 'src/Comment.php';
-      
+    
 ?>
 <!DOCTYPE html>
 <html>
@@ -42,18 +42,8 @@
                 ?>
             </div>
             <div id="main_content">
-                <form action="#" method="POST">
-                    <h2>Dodaj Tweet'a:</h2>
-                    <textarea placeholder="Napisz swojego tweet'a (max 140 znaków) !" 
-                              name="tweet_text" rows="6" cols="80" maxlength="140"
-                              ></textarea><br>
-                    <input type="submit" value="Wyślij" name="submit"><br><br>
-                </form>
                 <form>
-                    <h2>Wszystkie Tweet'y</h2><br>
-                    <?php
-                        require_once 'require_components/index_process.php';
-                    ?>
+                    <h3>Moje posty</h3><br>
                 </form>
             </div>
             <div id="footer">
