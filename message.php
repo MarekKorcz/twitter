@@ -41,9 +41,15 @@
                 ?>
             </div>
             <div id="main_content">
+                <h3>Wyślij wiadomośc do uzytkownika</h3>
+                <p>Wybierz do jakiego</p>
                 
+                /* kod wyswietlajacy uzytkownikow i dajacy wybor */
+                
+                <h3>Twoje Widomosci</h3>
+
                 <?php
-                    echo "Brak wiadomosci";
+                    require_once 'require_components/message_process';
                 ?>
                 
             </div>

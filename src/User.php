@@ -134,7 +134,7 @@ class User {
     }
     
     static public function loadUserByEmailAndPassword(mysqli $connection, $email, $pass){
-        $sql = "SELECT * FROM User WHERE email=$email";
+        $sql = "SELECT * FROM User WHERE email='$email'";
         
         $result = $connection->query($sql);
         

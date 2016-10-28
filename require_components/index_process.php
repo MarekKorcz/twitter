@@ -26,8 +26,20 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
     }
 }
 
-Tweet::loadAllTweets($conn);       
+// wczytuje wszystkie tweet'y z bazy
+$arr = Tweet::loadAllTweets($conn);
 
-//Tweet::displayTweets($conn);
+$length = count($arr);
+
+for($i = 0; $i < $length; $i++){
+
+    // wyciagam obiekt z tablicy i przypisuje do zmiennej poniewac w parametrze 
+    // funkcji nie moge uzyć tablicy z indeksem
+        $tweet = $arr[$i];
+        $convertedTweet = (string)$tweet;
+    
+    // wyswietlam wszystkie tweet'y po kolei
+        Tweet::showAsHTML($convertedTweet);
+}
 
 ?>
