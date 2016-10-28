@@ -7,6 +7,7 @@ message_text VARCHAR(140),
 s_id INT NOT NULL,
 r_id INT NOT NULL,
 receiver_switch TINYINT ZEROFILL,
+message_date DATETIME,
 FOREIGN KEY(s_id) REFERENCES User(user_id)
 ON DELETE CASCADE,
 FOREIGN KEY(r_id) REFERENCES User(user_id)
@@ -20,6 +21,7 @@ class Message{
     private $s_id;
     private $r_id;
     private $receiver_switch;
+    private $message_date;
     
     public function __construct(User $senderUser, User $receiverUser, $text, $switch = 0){
         $this->message_id = -1;
@@ -27,6 +29,7 @@ class Message{
         $this->s_id = $senderUser->getId();
         $this->r_id = $receiverUser->getId();
         $this->receiver_switch = $switch;
+        $this->message_date = date("Y-m-d h:i:s");
     }
     
     public function setMessageText($text){
@@ -67,25 +70,20 @@ class Message{
         return $this->receiver_switch;
     }
     
+    public function getMessageDate() {
+        return $this->message_date;
+    }
+    
     public function saveMessageToDB(mysqli $conn){
         if($this->message_id == -1){
-            $sql = "INSERT INTO Message (message_text, s_id, r_id, receiver_switch)"
-                 . "VALUES ('$this->message_text', '$this->s_id', '$this->r_id', '$this->receiver_switch')";
+            $sql = "INSERT INTO Message (message_text, s_id, r_id, receiver_switch, message_date)"
+                 . "VALUES ('$this->message_text', '$this->s_id', '$this->r_id', "
+                 . "'$this->receiver_switch', '$this->message_date')";
         
             $result = $conn->query($sql);
 
             if($result == true){
                 $this->message_id = $conn->insert_id;
-                return true;
-            }
-        }else{
-            $sql = "UPDATE Message SET message_text = '$this->message_text', "
-                 . "s_id = '$this->s_id', r_id = '$this->r_id', "
-                 . "receiver_switch = '$this->receiver_switch' WHERE message_id = '$this->message_id'";
-            
-            $result = $conn->query($sql);
-            
-            if($result == true){
                 return true;
             }
         }
