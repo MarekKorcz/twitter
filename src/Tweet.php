@@ -19,13 +19,13 @@ class Tweet{
     private $tweet_text;
     private $tweet_creation_date;
     
-    public function __construct(User $user = NULL, $tweet_text = "", $tweet_creation_date = ""){
+    public function __construct(User $user = NULL, $tweet_text = ""){
         
         $this->tweet_id = -1;
         $user != NULL ? $this->u_id = $user->getId() : $this->u_id = -1;
         $user != NULL ? $this->u_name = $user->getUsername() : $this->u_name = "";
         $this->tweet_text = $tweet_text;
-        $this->tweet_creation_date = $tweet_creation_date;
+        $this->tweet_creation_date = date("Y-m-d h:i:s");
     }
     
     public function setText($newText) {
@@ -83,7 +83,7 @@ class Tweet{
         return false;
     }
 
-    public function showAsHTML(){
+    public function showTweetAsHTML(){
 
         // przypisuje wlasciwosci obiektu do zmiennych
         $tweet_id = $this->getTweetId();
@@ -92,7 +92,7 @@ class Tweet{
         $tweet_date = $this->getDate();
 
         // wyswietlam tweet'a
-        echo "<div name=\"$tweet_id\" style=\"width: 900px; height: 80px; "
+        echo "<div name=\"tweet\" data-id=\"$tweet_id\" style=\"width: 900px; height: 80px; "
            . "background-color: green; border: 5px solid black;\">";
         echo "<strong>Tweet&nbsp;uzytkownika:</strong>&nbsp;$u_name<br>";
         echo "<strong>Tresc&nbsp;tweet'u:</strong>&nbsp;$tweet_text<br>";
@@ -117,7 +117,7 @@ class Tweet{
                 $loadedTweet->tweet_text = $row['tweet_text'];
                 $loadedTweet->tweet_creation_date = $row['tweet_creation_date'];
                 
-                $arr = $loadedTweet;
+                $arr[] = $loadedTweet;
             }
         }else{
                 echo "Brak Tweet'ow w bazie danych!";
