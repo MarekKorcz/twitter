@@ -86,13 +86,12 @@ class Tweet{
     public function showTweetAsHTML(){
 
         // przypisuje wlasciwosci obiektu do zmiennych
-        $tweet_id = $this->getTweetId();
         $u_name = $this->getUserName();
         $tweet_text = $this->getText();
         $tweet_date = $this->getDate();
 
         // wyswietlam tweet'a
-        echo "<div name=\"tweet\" data-id=\"$tweet_id\" style=\"width: 900px; height: 80px; "
+        echo "<div name=\"tweet\" style=\"width: 900px; height: 80px; "
            . "background-color: green; border: 5px solid black;\">";
         echo "<strong>Tweet&nbsp;uzytkownika:</strong>&nbsp;$u_name<br>";
         echo "<strong>Tresc&nbsp;tweet'u:</strong>&nbsp;$tweet_text<br>";
@@ -127,11 +126,11 @@ class Tweet{
     }    
     
     static public function loadTweetById(mysqli $connection, $tweet_id){
-        $sql = "SELECT * FROM Tweet WHERE tweet_id = $tweet_id";
+        $sql = "SELECT * FROM Tweet WHERE tweet_id = \"$tweet_id\"";
         
         $result = $connection->query($sql);
         
-        if($result == true && $result->num_rows == 0){
+        if($result == true && $result->num_rows == 1){
             $row = $result->fetch_assoc();
             $loadedTweet = new Tweet();
             $loadedTweet->tweet_id = $row['tweet_id'];
@@ -148,7 +147,7 @@ class Tweet{
     }
     
     static public function loadAllTweetsByUserId(mysqli $connection, User $user){
-        $sql = "SELECT * FROM Tweet WHERE u_id = $user->getId()";
+        $sql = "SELECT * FROM Tweet WHERE u_id = \"$user->getId()\"";
         
         $arr =[];
         

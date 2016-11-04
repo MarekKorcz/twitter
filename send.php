@@ -4,8 +4,8 @@
     if(!isset($_SESSION['isLogged']) && !isset($_SESSION['userId'])){
         // dodaje zmienna wyswietlajaca komunikat w login.php w razie 
         // gdyby wszedl tu ktos niezalogowany
-        $_SESSION['about_reminder'] = "<label style=\"color: red;\">Nie mozesz "
-         . "wyswietlic informacji o sobie poniewaz nie jestes zalogowany !</label>";
+        $_SESSION['message_reminder'] = "<label style=\"color: red;\">"
+         . "Zanim wyswietlisz wiadomosci, zaloguj się lub zarejestruj !</label>";
         
         // przekierowanie do login.php i zakonczenie dzialania skryptu
         header("Location: login.php");
@@ -15,6 +15,7 @@
     // podlaczone klasy z folderu 'src' 
     require_once 'src/Connection.php';
     require_once 'src/User.php';
+    require_once 'src/Message.php';
     
 ?>
 <!DOCTYPE html>
@@ -40,30 +41,11 @@
                 ?>
             </div>
             <div id="main_content">
-                <?php
-                    
-                    // dodaje skrypt obslugujacy wyswietlanie danych user'a 
-                    // oraz obslugi zmiany hasla.
-                    require_once'require_components/about_process.php';
-                ?>
-                <form method="post" action="#">
-                    <h3>Zmien haslo!</h3>
-                    Wprowadz ponownie swoj email:<br>
-                    <input type="email" name="email"/><br>
-                    Podaj stare haslo:<br>
-                    <input type="password" name="oldPass"/><br>
-                    Podaj nowe haslo:<br>
-                    <input type="password" name="newPass1"/><br>
-                    Powtorz nowe haslo:<br>
-                    <input type="password" name="newPass2"/><br><br>
-                    <input type="submit" name="submit" value="Zatwierdz"/><br><br>
-                </form>
-                <?php
-                    if(isset($_POST['changedPass'])){
-                        echo $_POST['changedPass'];
-                        unset($_POST['changedPass']);
-                    }
-                ?>
+                <h3>Wyślij wiadomość do uzytkownika</h3>
+                <p>Wybierz do jakiego</p>
+                
+                /* kod wyswietlajacy uzytkownikow i dajacy wybor */
+                
             </div>
             <div id="footer">
                 To by bylo na tyle. Kopi rajt oł rajt.

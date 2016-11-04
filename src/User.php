@@ -109,7 +109,7 @@ class User {
         }else{
             $sql = "UPDATE User SET email='$this->email', username='$this->username', "
                  . "hashed_password='$this->hashed_password', creation_date='$this->creation_date' "
-                 . "WHERE user_id=$this->user_id";
+                 . "WHERE user_id='$this->user_id'";
             $result = $connection->query($sql);
             if($result == true){              
                 return true;

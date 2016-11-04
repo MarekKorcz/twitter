@@ -21,54 +21,55 @@ echo "Data stworzenia mojego konta: ".$date." <br>";
 if($_SERVER['REQUEST_METHOD'] == "POST" && isset($_POST['submit'])){  
 
     // sprawdzam czy ktos wyslal cos formularzem zmiany hasla oraz sprawdzam zgodnosc nowego hasla
-    if(isset($_POST['newPass1']) && isset($_POST['newPass2']) && isset($_POST['oldPass']) &&
-             $_POST['newPass1'] == $_POST['newPass2'] && strlen($_POST['newPass1'] > 5)){
-
-        // trimuje nowe haslo
-        $newPass = trim($_POST['newPass1']);
-
-        // hashuje nowe podane przez user'a haslo
-        $new_hashed_pass = password_hash($newPass, PASSWORD_DEFAULT);
-
+    if(isset($_POST['newPass1']) && isset($_POST['newPass2']) &&
+            $_POST['newPass1'] == $_POST['newPass2'] && isset($_POST['oldPass']) && 
+            strlen($_POST['newPass1'] > 5)){   // bez sprawdzenia dlugosci mozna 
+                                               // zmienic na obojetnie jakie haslo 
+                                               // z literami jak i numerami. Ze strlen
+                                               // natomiast, tylko na numeryczne hasla
+        
         // trimuje podane przez uzytkownika w formularzu stare haslo
         $oldPass = trim($_POST['oldPass']);
 
-        // hashuje stare podane przez user'a haslo
-        //$old_hashed_pass = password_hash($oldPass, PASSWORD_DEFAULT);
+        // przypisuje email do zmiennej
+        $email = filter_var($_POST['email'], FILTER_VALIDATE_EMAIL);
 
-        // porownuje podane przez user'a stare haslo z tym z bazy danych
-        if(password_verify($oldPass, $userPass)){
+        // tworze obiekt klasy user
+        $user = User::loadUserByEmailAndPassword($conn, $email, $oldPass);
 
-            // zmieniam haslo w atrybucie obiektu user'a
-            $user->setPassword($new_hashed_pass);
+        if($user == true){
+   
+            // trimuje nowe haslo
+            $newPass1 = trim($_POST['newPass1']);
 
-            // zapisuje zmiany w obiekcie
+            // przypisuje nowe haslo do obiektu
+            $user->setPassword($newPass1);
+
+            // zapisuje zmiany
             if($user->saveToDB($conn)){
-                
-                // jesli uda sie zapisac tworze zminna z odpowiednim komunikatem
-                $_POST['changedPass'] = "<label style=\"color: green;\"> "
-                                      . "Haslo zostalo zmienione !! </label>";
+
+                 // jesli uda sie zapisac tworze zminna z odpowiednim komunikatem
+                 $_POST['changedPass'] = "<label style=\"color: green;\"> "
+                                   . "Haslo zostalo zmienione !! </label>"; 
             }else{
-                
-                // jesli nie uda sie zapisac tworze zminna z odpowiednim komunikatem
-                $_POST['changedPass'] = "<label style=\"color: red;\"> "
-                                      . "Hasla nie udalo sie zmienic. Blad !! </label>";
-            }
+
+                 // jesli nie uda sie zapisac tworze zminna z odpowiednim komunikatem
+                 $_POST['changedPass'] = "<label style=\"color: red;\"> "
+                        . "Hasla nie udalo sie zmienic. Blad !! </label>";
+            }     
         }else{
-            
-            // jesli podane przez user'a stare haslo rozni sie od tego z bazy danych, 
-            // tworze zminna z odpowiednim komunikatem
+            // jesli nie uda sie stworzyc obiektu klasy user to tworze 
+            // zminna z odpowiednim komunikatem
             $_POST['changedPass'] = "<label style=\"color: red;\"> "
-                                  . "Podane przez Ciebie stare haslo rozni "
-                                  . "sie od tego z bazy danych !! </label>";
+                     . "Zostalo podane zle haslo od konta !</label>";
         }
     }else{
-        
+
         // jesli hasla roznia sie od siebie lub maja zla dluosc tworze zminna 
         // z odpowiednim komunikatem
         $_POST['changedPass'] = "<label style=\"color: red;\"> "
-                                      . "Hasla roznia sie od siebie lub "
-                                      . "maja inna dlugosc !! </label>";
+                              . "Hasla roznia sie od siebie lub "
+                              . "maja inna dlugosc !! </label>";
     }
 }
 ?>

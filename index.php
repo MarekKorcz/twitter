@@ -47,7 +47,7 @@
                     <textarea placeholder="Napisz swojego tweet'a (max 140 znaków) !" 
                               name="tweet_text" rows="6" cols="80" maxlength="140"
                               ></textarea><br>
-                    <input type="submit" value="Wyślij" name="submit"><br><br>
+                    <input type="submit" value="Wyślij" name="tweet_submit"><br><br>
                 </form>
                 <form>
                     <h2>Wszystkie Tweet'y</h2><br>

@@ -89,4 +89,30 @@ class Message{
         }
         return false;
     }
+    
+    static public function loadAllMessages(mysqli $connection){
+        $sql = "SELECT * FROM Message";
+        
+        $arr =[];
+        
+        $result = $connection->query($sql);
+        
+        if($result == true && $result->num_rows != 0){
+            foreach($result as $row){
+                $loadedMessage = new Message();
+                $loadedMessage->message_id = $row['message_id'];
+                $loadedMessage->message_text = $row['message_text'];
+                $loadedMessage->s_id = $row['s_id'];
+                $loadedMessage->r_id = $row['r_id'];
+                $loadedMessage->receiver_switch = $row['receiver_switch'];
+                $loadedMessage->message_date = $row['message_date'];
+                
+                $arr[] = $loadedMessage;
+            }
+        }else{
+                echo "Brak Tweet'ow w bazie danych!";
+        }
+        
+        return $arr;
+    } 
 }
