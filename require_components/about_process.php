@@ -23,10 +23,7 @@ if($_SERVER['REQUEST_METHOD'] == "POST" && isset($_POST['submit'])){
     // sprawdzam czy ktos wyslal cos formularzem zmiany hasla oraz sprawdzam zgodnosc nowego hasla
     if(isset($_POST['newPass1']) && isset($_POST['newPass2']) &&
             $_POST['newPass1'] == $_POST['newPass2'] && isset($_POST['oldPass']) && 
-            strlen($_POST['newPass1'] > 5)){   // bez sprawdzenia dlugosci mozna 
-                                               // zmienic na obojetnie jakie haslo 
-                                               // z literami jak i numerami. Ze strlen
-                                               // natomiast, tylko na numeryczne hasla
+            strlen($_POST['newPass1']) > 5){   
         
         // trimuje podane przez uzytkownika w formularzu stare haslo
         $oldPass = trim($_POST['oldPass']);

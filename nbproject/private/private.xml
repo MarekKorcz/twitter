@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project-private xmlns="http://www.netbeans.org/ns/project-private/1">
+    <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
+    <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
+        <group>
+            <file>file:/home/mark/Workspace/twitter/logout.php</file>
+            <file>file:/home/mark/Workspace/twitter/require_components/own_tweets_process.php</file>
+            <file>file:/home/mark/Workspace/twitter/message.php</file>
+            <file>file:/home/mark/Workspace/twitter/require_components/send_process.php</file>
+            <file>file:/home/mark/Workspace/twitter/src/Tweet.php</file>
+            <file>file:/home/mark/Workspace/twitter/src/Comment.php</file>
+            <file>file:/home/mark/Workspace/twitter/current_message.php</file>
+            <file>file:/home/mark/Workspace/twitter/own_tweets.php</file>
+            <file>file:/home/mark/Workspace/twitter/src/User.php</file>
+            <file>file:/home/mark/Workspace/twitter/src/Message.php</file>
+            <file>file:/home/mark/Workspace/twitter/send.php</file>
+            <file>file:/home/mark/Workspace/twitter/require_components/message_process.php</file>
+        </group>
+    </open-files>
+</project-private>

@@ -5,7 +5,7 @@
         // dodaje zmienna wyswietlajaca komunikat w login.php w razie 
         // gdyby wszedl tu ktos niezalogowany
         $_SESSION['message_reminder'] = "<label style=\"color: red;\">"
-         . "Zanim wyswietlisz wiadomosci, zaloguj się lub zarejestruj !</label>";
+         . "Zanim wyslesz wiadomosci, zaloguj się lub zarejestruj !</label>";
         
         // przekierowanie do login.php i zakonczenie dzialania skryptu
         header("Location: login.php");
@@ -41,11 +41,23 @@
                 ?>
             </div>
             <div id="main_content">
-                <h3>Wyślij wiadomość do uzytkownika</h3>
-                <p>Wybierz do jakiego</p>
-                
-                /* kod wyswietlajacy uzytkownikow i dajacy wybor */
-                
+                <h3>Wyślij wiadomość do uzytkownika!</h3>
+                <h4>Wybierz do ktorego:</h4>
+                    <form action="#">    
+                        <?php
+                            require_once 'require_components/send_process.php';
+                        ?>
+                        <br><textarea placeholder="Napisz swoja wiadomosc do wybranego uzytkownika !" 
+                              name="message_text" rows="7" cols="80" maxlength="500"
+                              ></textarea><br>
+                        <input type="submit" name="message_submit" value="Wyslij wiadomosc"> 
+                    </form>
+                        <?php
+                            if(isset($_POST['messageResult'])){
+                                echo $_POST['messageResult'];
+                                unset($_POST['messageResult']);
+                            }
+                        ?>
             </div>
             <div id="footer">
                 To by bylo na tyle. Kopi rajt oł rajt.

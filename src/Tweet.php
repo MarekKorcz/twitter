@@ -146,14 +146,14 @@ class Tweet{
         return null;
     }
     
-    static public function loadAllTweetsByUserId(mysqli $connection, User $user){
-        $sql = "SELECT * FROM Tweet WHERE u_id = \"$user->getId()\"";
+    static public function loadAllTweetsByUserId(mysqli $conn, $user_id){
+        $sql = "SELECT * FROM Tweet WHERE u_id ='$user_id'";
         
         $arr =[];
         
-        $result = $connection->query($sql);
+        $result = $conn->query($sql);
         
-        if($result == true && $result != 0){
+        if($result == true && $result->num_rows != 0){
             foreach($result as $row){
                 $loadedTweet = new Tweet();
                 $loadedTweet->tweet_id = $row['tweet_id'];
@@ -162,7 +162,7 @@ class Tweet{
                 $loadedTweet->tweet_text = $row['tweet_text'];
                 $loadedTweet->tweet_creation_date = $row['tweet_creation_date'];
                 
-                $arr = $loadedTweet;
+                $arr[] = $loadedTweet;
             }
         }else{
             echo "Brak Tweet'ow nalezacych do danego User'a";

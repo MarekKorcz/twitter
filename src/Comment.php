@@ -104,14 +104,14 @@ class Comment{
         echo "</form></div><br><br>";
     }
     
-    static public function loadCommentsByTweetId(mysqli $connection, $tweet_id){
+    static public function loadCommentsByTweetId(mysqli $conn, $tweet_id){
         $sql = "SELECT * FROM Comment WHERE t_id = \"$tweet_id\"";
         
-        $result = $connection->query($sql);
+        $result = $conn->query($sql);
         
         $arr = [];
         
-        if($result == true && $result->num_rows > 0){
+        if($result == true && $result->num_rows != 0){
             foreach($result as $row){
                 $loadedComment = new Comment();
                 $loadedComment->comment_id = $row['comment_id'];
@@ -124,6 +124,8 @@ class Comment{
             }
             
             return $arr;
+        }else{
+            echo "Brak komentarzy do tego tweet'u";
         }
         return null;
     }

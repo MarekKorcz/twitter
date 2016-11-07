@@ -61,7 +61,7 @@ class User {
     /**
      * @return type
      */
-    public function getId() {
+    public function getId(){
         return $this->user_id;
     }
     
@@ -133,6 +133,22 @@ class User {
         return true;
     }
     
+    public function showUserAsHTML(){
+        
+        // przypisuje dane do zmiennych
+        $receiver_id = $this->getId();
+        $username = $this->getUsername();
+        $email = $this->getEmail();
+        
+        // wyświetlam dane user'a
+        echo "<label>";
+        echo "<input type=\"hidden\" name=\"receiver_id\" value=\"$receiver_id\">";
+        echo "<input type=\"radio\" name=\"button\"><strong>Imie:&nbsp;</strong>".
+             "$username&nbsp;<strong>Email:&nbsp;</strong>$email<br>";
+        echo "</label>";
+    }
+
+
     static public function loadUserByEmailAndPassword(mysqli $connection, $email, $pass){
         $sql = "SELECT * FROM User WHERE email='$email'";
         
@@ -162,7 +178,7 @@ class User {
      * @return \User
      */
     static public function loadUserById(mysqli $connection, $id){
-        $sql = "SELECT * FROM User WHERE user_id=$id";
+        $sql = "SELECT * FROM User WHERE user_id='$id'";
         
         $result = $connection->query($sql);
         

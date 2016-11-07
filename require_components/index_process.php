@@ -30,6 +30,8 @@ if($_SERVER['REQUEST_METHOD'] == "POST" && isset($_POST['tweet_submit'])){
 // obsluga tworzenia komentarza
 if($_SERVER['REQUEST_METHOD'] == "GET" && isset($_GET['tweet_id']) && isset($_GET['comment_text'])){  
 
+    // ........... wartoby jeszcze dodac isset($_GET['comment_submit'])...........
+    
     if(strlen($_GET['comment_text']) > 0 && strlen($_GET['comment_text']) <= 140 ){
 
         // tworze obiekt user'a na podstawie id zapisanego w zmiennej sesyjnej 
@@ -92,7 +94,7 @@ for($i = 0; $i < $tweet_length; $i++){
         }
 
        // a na koniec ostatniego z nich doczepiam formularz do dodania nowego 
-       // komentarza ktoremu w parametrze podaje id ostatniego tweetu
+       // komentarza ktoremu w parametrze podaje obiekt ostatniego tweetu
         Comment::addCommentHTMLForm($tweet);
 }
 
