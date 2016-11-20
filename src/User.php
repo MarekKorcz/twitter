@@ -7,7 +7,7 @@ email VARCHAR(30) UNIQUE,
 username VARCHAR(20),
 hashed_password VARCHAR(100),
 creation_date DATETIME
-); 
+) 
 */
 
 class User {
@@ -141,11 +141,14 @@ class User {
         $email = $this->getEmail();
         
         // wyświetlam dane user'a
-        echo "<label>";
-        echo "<input type=\"hidden\" name=\"receiver_id\" value=\"$receiver_id\">";
-        echo "<input type=\"radio\" name=\"button\"><strong>Imie:&nbsp;</strong>".
-             "$username&nbsp;<strong>Email:&nbsp;</strong>$email<br>";
-        echo "</label>";
+        
+echo<<<EOT
+        <label>
+            <input type="radio" name="receiver_id" value="$receiver_id">
+            <strong>Imie: </strong>$username <strong>Email: </strong>$email<br>
+        </label>
+EOT;
+        
     }
 
 

@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Czas wygenerowania: 07 Lis 2016, 10:02
+-- Czas wygenerowania: 20 Lis 2016, 20:43
 -- Wersja serwera: 5.5.50-0ubuntu0.14.04.1
 -- Wersja PHP: 5.5.9-1ubuntu4.19
 
@@ -29,12 +29,28 @@ SET time_zone = "+00:00";
 CREATE TABLE IF NOT EXISTS `Comment` (
   `comment_id` int(11) NOT NULL AUTO_INCREMENT,
   `comment_date` datetime DEFAULT NULL,
-  `comment_text` varchar(200) COLLATE utf8_polish_ci DEFAULT NULL,
+  `comment_text` varchar(60) COLLATE utf8_polish_ci DEFAULT NULL,
   `comment_owner` varchar(20) COLLATE utf8_polish_ci DEFAULT NULL,
-  `t_id` int(11) NOT NULL,
+  `comment_owner_id` int(11) NOT NULL,
+  `tweet_id` int(11) NOT NULL,
   PRIMARY KEY (`comment_id`),
-  KEY `t_id` (`t_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_polish_ci AUTO_INCREMENT=1 ;
+  KEY `tweet_id` (`tweet_id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_polish_ci AUTO_INCREMENT=10 ;
+
+--
+-- Zrzut danych tabeli `Comment`
+--
+
+INSERT INTO `Comment` (`comment_id`, `comment_date`, `comment_text`, `comment_owner`, `comment_owner_id`, `tweet_id`) VALUES
+(1, '2016-11-17 11:51:57', 'a moze kos??', 'Patrycja', 2, 4),
+(2, '2016-11-17 11:52:12', 'ja nie', 'Patrycja', 2, 3),
+(3, '2016-11-17 11:52:26', 'hej', 'Patrycja', 2, 1),
+(4, '2016-11-17 11:52:54', 'pffff', 'Zenia', 4, 4),
+(5, '2016-11-17 11:53:09', 'to ja', 'Zenia', 4, 3),
+(6, '2016-11-17 11:53:20', 'tra la la', 'Zenia', 4, 2),
+(7, '2016-11-17 11:53:37', 'pozdrawiam wszystkich polakow', 'Zenia', 4, 1),
+(8, '2016-11-20 08:35:25', 'jestes zwyciezca', 'Patrycja', 2, 5),
+(9, '2016-11-20 08:36:13', 'czy zamawial pan budzenie?', 'Marek', 1, 6);
 
 -- --------------------------------------------------------
 
@@ -47,14 +63,33 @@ CREATE TABLE IF NOT EXISTS `Message` (
   `message_text` varchar(500) COLLATE utf8_polish_ci DEFAULT NULL,
   `sender_name` varchar(20) COLLATE utf8_polish_ci DEFAULT NULL,
   `receiver_name` varchar(20) COLLATE utf8_polish_ci DEFAULT NULL,
-  `s_id` int(11) NOT NULL,
-  `r_id` int(11) NOT NULL,
-  `receiver_switch` tinyint(3) unsigned zerofill DEFAULT NULL,
+  `sender_id` int(11) NOT NULL,
+  `receiver_id` int(11) NOT NULL,
+  `receiver_switch` varchar(1) COLLATE utf8_polish_ci DEFAULT NULL,
   `message_date` datetime DEFAULT NULL,
   PRIMARY KEY (`message_id`),
-  KEY `s_id` (`s_id`),
-  KEY `r_id` (`r_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_polish_ci AUTO_INCREMENT=1 ;
+  KEY `sender_id` (`sender_id`),
+  KEY `receiver_id` (`receiver_id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_polish_ci AUTO_INCREMENT=14 ;
+
+--
+-- Zrzut danych tabeli `Message`
+--
+
+INSERT INTO `Message` (`message_id`, `message_text`, `sender_name`, `receiver_name`, `sender_id`, `receiver_id`, `receiver_switch`, `message_date`) VALUES
+(1, 'Jak tam Zania?', 'Marek', 'Zenia', 1, 4, '0', '2016-11-20 08:38:40'),
+(2, 'Kiedy sie widzimy Kajetan?', 'Marek', 'Kajetan', 1, 5, '0', '2016-11-20 08:38:52'),
+(3, 'Czy Twoja siostra jest wolna?', 'Marek', 'Pacztam', 1, 6, '0', '2016-11-20 08:39:04'),
+(4, 'Beckham?', 'Marek', 'david', 1, 7, '0', '2016-11-20 08:39:17'),
+(5, 'pffffffffff', 'Marek', 'Bogna', 1, 8, '0', '2016-11-20 08:39:28'),
+(6, 'Kiedy to sie skonczy?', 'Marek', 'Zenia', 1, 4, '0', '2016-11-20 08:39:54'),
+(7, 'Nie wiem czemu do Ciebie pisze', 'Marek', 'Kajetan', 1, 5, '0', '2016-11-20 08:40:04'),
+(8, 'Pozdrow matke!', 'Marek', 'Pacztam', 1, 6, '0', '2016-11-20 08:40:11'),
+(9, 'Jak tam Victoria? Zdrowa?', 'Marek', 'david', 1, 7, '0', '2016-11-20 08:40:25'),
+(10, 'NIe', 'Marek', 'Bogna', 1, 8, '0', '2016-11-20 08:40:30'),
+(11, 'Spadaj', 'Patrycja', 'Marek', 2, 1, '0', '2016-11-20 08:40:55'),
+(12, 'Niezla z Ciebie lisica', 'Pacztam', 'Marek', 6, 1, '0', '2016-11-20 08:41:49'),
+(13, 'W Twoim imieniu brakuje kropki', 'Pacztam', 'Zenia', 6, 4, '0', '2016-11-20 08:42:07');
 
 -- --------------------------------------------------------
 
@@ -64,26 +99,25 @@ CREATE TABLE IF NOT EXISTS `Message` (
 
 CREATE TABLE IF NOT EXISTS `Tweet` (
   `tweet_id` int(11) NOT NULL AUTO_INCREMENT,
-  `u_id` int(11) NOT NULL,
-  `u_name` varchar(20) COLLATE utf8_polish_ci DEFAULT NULL,
+  `user_id` int(11) NOT NULL,
+  `user_name` varchar(20) COLLATE utf8_polish_ci DEFAULT NULL,
   `tweet_text` varchar(140) COLLATE utf8_polish_ci DEFAULT NULL,
   `tweet_creation_date` datetime DEFAULT NULL,
   PRIMARY KEY (`tweet_id`),
-  KEY `u_id` (`u_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_polish_ci AUTO_INCREMENT=83 ;
+  KEY `user_id` (`user_id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_polish_ci AUTO_INCREMENT=7 ;
 
 --
 -- Zrzut danych tabeli `Tweet`
 --
 
-INSERT INTO `Tweet` (`tweet_id`, `u_id`, `u_name`, `tweet_text`, `tweet_creation_date`) VALUES
-(73, 1, 'Marek', 'Najwidoczniej tak!!', '2016-10-31 12:24:42'),
-(74, 1, 'Marek', 'ddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd', '2016-10-31 12:39:00'),
-(75, 1, 'Marek', 'lalalalalalaalallala', '2016-10-31 08:57:41'),
-(77, 1, 'Marek', 'ajajaj', '2016-11-02 11:05:34'),
-(80, 26, 'Igor', 'dobry dzien', '2016-11-07 06:56:07'),
-(81, 20, 'Bogna', 'pozdrawiam wszystkich polakow', '2016-11-07 06:57:18'),
-(82, 20, 'Bogna', 'La la la ala lalalalalala', '2016-11-07 07:35:59');
+INSERT INTO `Tweet` (`tweet_id`, `user_id`, `user_name`, `tweet_text`, `tweet_creation_date`) VALUES
+(1, 1, 'Marek', 'JoÅ‚ joÅ‚', '2016-11-07 10:23:00'),
+(2, 2, 'Patrycja', 'La la la', '2016-11-07 10:56:46'),
+(3, 4, 'Zenia', 'co to kto to', '2016-11-13 06:44:16'),
+(4, 1, 'Marek', 'Czyzby czyzyk', '2016-11-16 05:56:28'),
+(5, 8, 'Bogna', 'Kim jestes?', '2016-11-20 08:34:36'),
+(6, 2, 'Patrycja', 'kiedys zadzwoni sumienie', '2016-11-20 08:35:50');
 
 -- --------------------------------------------------------
 
@@ -99,29 +133,20 @@ CREATE TABLE IF NOT EXISTS `User` (
   `creation_date` datetime DEFAULT NULL,
   PRIMARY KEY (`user_id`),
   UNIQUE KEY `email` (`email`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_polish_ci AUTO_INCREMENT=27 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_polish_ci AUTO_INCREMENT=9 ;
 
 --
 -- Zrzut danych tabeli `User`
 --
 
 INSERT INTO `User` (`user_id`, `email`, `username`, `hashed_password`, `creation_date`) VALUES
-(1, 'mark.korcz@gmail.com', 'Marek', '$2y$10$IdBSS9b/dfsVzlarlMF/s.UXp1l/97q7AmEmJ95j0YzO4c/23bgRy', '2016-10-23 10:58:52'),
-(2, 'mark.korcz2@gmail.com', 'Marek', '$2y$10$TDr5eZIl4k4i.h6o75wNZuEXW1SP8KhFqfF2Y8.Kx0dvyK3DKWGi6', '2016-10-23 11:02:57'),
-(4, 'steffff@pa.cg', 'Stefan', '$2y$10$Ffbne0O6MPlQHWS4LG54EeYGGR6qsoqdrcPRuZJCdEKqMaXxjJZYq', '2016-10-24 07:47:13'),
-(5, 'patrycja@gmail.com', 'Patrycja', '$2y$10$V54aIwmyFIRSCrHqqL2yIuHZCq6Gg5drLcahvnpDORdU9IilCFTpK', '2016-10-24 10:10:36'),
-(11, 'romek@gmail.com', 'Romek', '$2y$10$xNbX/JZBXiCnNxJ4AlcP/OES7XX5/Couah/TS/zxgLcs2bG93SqgO', '2016-10-24 09:32:14'),
-(13, 'jozef.stalin@gmail.com', 'Jozef', '$2y$10$.SrsIYA.zzjqBYdqahok.ugioRB0VeEZqq17o4bWX2SlczKXn0iaq', '2016-10-25 09:36:02'),
-(14, 'bogumil@gmail.com', 'Bogumil', '$2y$10$EizW4hPxxErNSuuEqkIOI.cxDS2ZYyM182bkRQtn/9RyyvOnoEDuK', '2016-10-25 10:38:53'),
-(15, 'ernest@gmail.com', 'Ernest', '$2y$10$PzAZrZEn2wQXlPf5tHImbuQZUMPVOv2dW4U7SxfwGQDoyYzpXn8fu', '2016-10-26 12:11:09'),
-(16, 'zygmunt@gmail.com', 'Zygmunt', '$2y$10$Ps/rnzhg6WXlbhwhte0VLOPTuaX.FnJigFGhZ1dqKwQ8NhY25rizW', '2016-10-26 06:51:27'),
-(17, 'marko.korczu@gmail.com', 'Marko', '$2y$10$/TkPuhPkibyBLLmY3nM2VOMsPDohdYDMtGJmIm1uQl6ZDHUPK75H2', '2016-10-26 11:29:01'),
-(19, 'mirek@gmail.com', 'Mirek', '$2y$10$z7TyEUSfF1GooWysUJFdwuT1xhURpxu1FgRj296ilNBC1xDs0Hxme', '2016-10-27 08:11:53'),
-(20, 'bogna@gmail.com', 'Bogna', '$2y$10$HOkqVDhCBuAlxI79mbJ1Eu/3HvmHTCM9WsRxMlRHkb9IxnMBSh0DS', '2016-10-27 08:42:02'),
-(21, 'lololo@gmail.com', 'lololo', '$2y$10$Z.EWLQ.tx/72ZPM6.iSwxu70oa35B77/2PNF2/XNuNhRFp45GfTPK', '2016-10-27 12:19:49'),
-(22, 'kakademona@gmail.com', 'kakademona', '$2y$10$.9qwTs2QmJqmidw.YKbv8.6avXD94lJLtBuwFSIrVKqAYSpgIxfs6', '2016-10-27 09:57:53'),
-(23, 'aaaaaaaaa@aaaaaa.pl', 'aaaaaaaaaa', '$2y$10$DXx1JZWVi26QehLYJfQQMONbzt1k/xE7dv37CMZAZgzg.leRCeXdS', '2016-10-27 10:43:33'),
-(26, 'igor@gmail.com', 'Igor', '$2y$10$8x2i/7.8sS/T.TRVURD8YeekV8BUTVMoBITphv4QBksTtCPhkWuXi', '2016-11-07 06:56:01');
+(1, 'mark.korcz@gmail.com', 'Marek', '$2y$10$dOwaGSshZpSQ5LcOqHLfc.D9YgUvUs/CYQpZVElp9IkdLOqIUX7SG', '2016-11-07 10:22:52'),
+(2, 'patrycja@gmail.com', 'Patrycja', '$2y$10$UwNgA9FCUEny3Ch2sxj87u9i0kfH3PQG5WPgQ13CkkRNrvW2JkHIi', '2016-11-07 10:56:24'),
+(4, 'zenia@gmail.com', 'Zenia', '$2y$10$P1zA7WtUIE3x9ltvHa5otunUtvqQt7/x689YbeutgTE5M.27drWKW', '2016-11-13 06:43:42'),
+(5, 'kajetan@gmail.com', 'Kajetan', '$2y$10$UrJUMzon4MHgRQzEuGHWJOq.3fHUIbziPozcrYWGoL5yoHfVvOYfW', '2016-11-13 06:54:47'),
+(6, 'pacztam@gmail.com', 'Pacztam', '$2y$10$zQPocjfXpg1TqtR11lJKtelA.N.m6ziYAuSh1ZCqeJqNg/0xEi3Me', '2016-11-13 06:58:54'),
+(7, 'david@gmail.com', 'david', '$2y$10$uwZTW5PVgrd9L3uIGwgDEO2kQ7uu/UM42ZQUaeh5rfx5ZDZSzJQ3G', '2016-11-16 05:27:35'),
+(8, 'bogna@gmail.com', 'Bogna', '$2y$10$VGGSsE4.OWwYI2dzBwMWDOyoiTR9DQ3FuzwgRGFfJz93GygdmqOvS', '2016-11-20 08:34:29');
 
 --
 -- Ograniczenia dla zrzutów tabel
@@ -131,20 +156,20 @@ INSERT INTO `User` (`user_id`, `email`, `username`, `hashed_password`, `creation
 -- Ograniczenia dla tabeli `Comment`
 --
 ALTER TABLE `Comment`
-  ADD CONSTRAINT `Comment_ibfk_1` FOREIGN KEY (`t_id`) REFERENCES `Tweet` (`tweet_id`) ON DELETE CASCADE;
+  ADD CONSTRAINT `Comment_ibfk_1` FOREIGN KEY (`tweet_id`) REFERENCES `Tweet` (`tweet_id`) ON DELETE CASCADE;
 
 --
 -- Ograniczenia dla tabeli `Message`
 --
 ALTER TABLE `Message`
-  ADD CONSTRAINT `Message_ibfk_1` FOREIGN KEY (`s_id`) REFERENCES `User` (`user_id`) ON DELETE CASCADE,
-  ADD CONSTRAINT `Message_ibfk_2` FOREIGN KEY (`r_id`) REFERENCES `User` (`user_id`) ON DELETE CASCADE;
+  ADD CONSTRAINT `Message_ibfk_1` FOREIGN KEY (`sender_id`) REFERENCES `User` (`user_id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `Message_ibfk_2` FOREIGN KEY (`receiver_id`) REFERENCES `User` (`user_id`) ON DELETE CASCADE;
 
 --
 -- Ograniczenia dla tabeli `Tweet`
 --
 ALTER TABLE `Tweet`
-  ADD CONSTRAINT `Tweet_ibfk_1` FOREIGN KEY (`u_id`) REFERENCES `User` (`user_id`) ON DELETE CASCADE;
+  ADD CONSTRAINT `Tweet_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `User` (`user_id`) ON DELETE CASCADE;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;

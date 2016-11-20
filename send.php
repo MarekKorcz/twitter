@@ -43,7 +43,7 @@
             <div id="main_content">
                 <h3>Wyślij wiadomość do uzytkownika!</h3>
                 <h4>Wybierz do ktorego:</h4>
-                    <form action="#">    
+                    <form action="#" method="POST">    
                         <?php
                             require_once 'require_components/send_process.php';
                         ?>

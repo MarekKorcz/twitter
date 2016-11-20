@@ -4,8 +4,8 @@
     if(!isset($_SESSION['isLogged']) && !isset($_SESSION['userId'])){
         // dodaje zmienna wyswietlajaca komunikat w login.php w razie 
         // gdyby wszedl tu ktos niezalogowany
-        $_SESSION['index_reminder'] = "<label style=\"color: red;\">"
-           . "Zanim wyswietlisz Tweety, zaloguj się lub zarejestruj !</label>";
+        $_SESSION['message_reminder'] = "<label style=\"color: red;\">"
+         . "Zanim wyswietlisz wiadomosc, zaloguj się lub zarejestruj !</label>";
         
         // przekierowanie do login.php i zakonczenie dzialania skryptu
         header("Location: login.php");
@@ -13,11 +13,10 @@
     }
     
     // podlaczone klasy z folderu 'src' 
-    require_once 'src/Connection.php'; 
+    require_once 'src/Connection.php';
     require_once 'src/User.php';
-    require_once 'src/Tweet.php';
-    require_once 'src/Comment.php';
-      
+    require_once 'src/Message.php';
+    
 ?>
 <!DOCTYPE html>
 <html>
@@ -33,12 +32,6 @@
             </div>
             <div id="menu">
                 <?php
-                
-                    if(isset($_POST['receiver_id']) && isset($_POST['message_text']) && $_POST['receiver_id'] != ""){
-                        echo $_POST['receiver_id'].'<br>';
-                        echo $_POST['message_text'].'<br>';
-                    }
-                
                     require_once 'require_components/menu.php';
                     
                     // dodatkowy przycisk 'Wyloguj sie' dla zalogowanych uzytkownikow
@@ -48,19 +41,21 @@
                 ?>
             </div>
             <div id="main_content">
-                <form action="#" method="POST">
-                    <h2>Dodaj Tweet'a:</h2>
-                    <textarea placeholder="Napisz swojego tweet'a (max 140 znaków) !" 
-                              name="tweet_text" rows="6" cols="80" maxlength="140"
-                              ></textarea><br>
-                    <input type="submit" value="Wyślij" name="tweet_submit"><br><br>
-                </form>
-                <form>
-                    <h2>Wszystkie Tweet'y</h2><br>
-                    <?php
-                        require_once 'require_components/index_process.php';
-                    ?>
-                </form>
+                <?php                    
+                    
+                    // przypisuje do zmiennej wywolanie zaladowania wiadomosci
+                    $received_message = Message::loadMessageById($conn, $_GET['id']);
+                
+                    // jesli wiadomosc o danym id istnieje to wyswietlam ja
+                    if($received_message == true){
+                        $received_message->showReceivedMessageAsHTML($conn);
+                    }else{
+                        
+                        // przekierowanie do index.php
+                        header("Location: index.php");
+                        exit();
+                    }
+                ?>
             </div>
             <div id="footer">
                 To by bylo na tyle. Kopi rajt oł rajt.

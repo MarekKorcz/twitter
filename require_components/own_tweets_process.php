@@ -1,9 +1,9 @@
 <?php
 
-// wczytuje wszystkie tweet'y danego user'a z bazy
+// wczytuje wszystkie tweet'y user'a z bazy
 $arr_own_tweets = Tweet::loadAllTweetsByUserId($conn, $_SESSION['userId']);
 
-// mierze dludosc tablicy
+// mierze dlugosc tablicy
 $own_tweets_length = count($arr_own_tweets);
 
 for($i = 0; $i < $own_tweets_length; $i++){

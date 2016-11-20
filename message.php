@@ -41,8 +41,6 @@
                 ?>
             </div>
             <div id="main_content">
-                <h3>Twoje wiadomości:</h3>
-
                 <?php
                     require_once 'require_components/message_process.php';
                 ?>

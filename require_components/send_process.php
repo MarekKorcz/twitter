@@ -1,26 +1,22 @@
 <?php
 
-// obsluga tworzenia wiadomoscie
-if($_SERVER['REQUEST_METHOD'] == "GET" && isset($_GET['receiver_id']) && isset($_GET['message_text'])){  
-
-    // ........... wartoby jeszcze dodac isset($_GET['message_submit'])...........
+// obsluga tworzenia wiadomosci
+if($_SERVER['REQUEST_METHOD'] == "POST" && isset($_POST['receiver_id']) && isset($_POST['message_text'])){  
     
-    if(strlen($_GET['message_text']) > 0 && strlen($_GET['message_text']) <= 500 ){
+    if(strlen($_POST['message_text']) > 0 && strlen($_POST['message_text']) <= 500 ){
 
         // tworze obiekt user'a wysyłającego wiadomość na podstawie id zapisanego
         // w zmiennej sesyjnej powstałej podczas logowania/rejestracji
         $sender_user = User::loadUserById($conn, $_SESSION['userId']);        
         
-        // tworze obiekt user'a wysyłającego wiadomość na podstawie id zapisanego
-        // w zmiennej sesyjnej powstałej podczas logowania/rejestracji
-        $receiver_user = User::loadUserById($conn, $_GET['receiver_id']);  
+        // tworze obiekt user'a do którego wiadomość ma zostać wysłana
+        $receiver_user = User::loadUserById($conn, $_POST['receiver_id']);  
         
         // przypisuje text do zmiennej
-        $message_text = trim($_GET['message_text']);
+        $message_text = trim($_POST['message_text']);
 
         // tworze nowy komentarz
-        $newMessage = new Message($sender_user, $receiver_user, $message_text);
-        
+        $newMessage = new Message($message_text, $sender_user, $receiver_user);
         
         // zapisuje wiadomosc do bazy danych
         if($newMessage->saveMessageToDB($conn)){
@@ -56,8 +52,9 @@ if($users == true){
     
     // iteruje i wyswietlam wszystkich userow z pominieciem siebie samego
     for($i = 0; $i < $users_length; $i++){
+        
         $single_user = $users[$i];
-        //var_dump($single_user);
+
         if($single_user->getId() != $_SESSION['userId']){
             $single_user->showUserAsHTML();
         }

@@ -3,27 +3,27 @@
 /*
 CREATE TABLE Tweet (
 tweet_id INT PRIMARY KEY AUTO_INCREMENT,
-u_id INT NOT NULL,
-u_name VARCHAR(20),
+user_id INT NOT NULL,
+user_name VARCHAR(20),
 tweet_text VARCHAR(140),
 tweet_creation_date DATETIME,
-FOREIGN KEY(u_id) REFERENCES User(user_id)
+FOREIGN KEY(user_id) REFERENCES User(user_id)
 ON DELETE CASCADE
 )
 */ 
 
 class Tweet{
     private $tweet_id;
-    private $u_id;
-    private $u_name;
+    private $user_id;
+    private $user_name;
     private $tweet_text;
     private $tweet_creation_date;
     
     public function __construct(User $user = NULL, $tweet_text = ""){
         
         $this->tweet_id = -1;
-        $user != NULL ? $this->u_id = $user->getId() : $this->u_id = -1;
-        $user != NULL ? $this->u_name = $user->getUsername() : $this->u_name = "";
+        $user != NULL ? $this->user_id = $user->getId() : $this->user_id = -1;
+        $user != NULL ? $this->user_name = $user->getUsername() : $this->user_name = "";
         $this->tweet_text = $tweet_text;
         $this->tweet_creation_date = date("Y-m-d h:i:s");
     }
@@ -45,11 +45,11 @@ class Tweet{
     }
 
     public function getUserId() {
-        return $this->u_id;
+        return $this->user_id;
     }
     
     public function getUserName(){
-        return $this->u_name;
+        return $this->user_name;
     }
     
     public function getText(){
@@ -62,8 +62,8 @@ class Tweet{
 
     public function saveToDB(mysqli $connection){
         if($this->tweet_id == -1){
-            $sql = "INSERT INTO Tweet (u_id, u_name, tweet_text, tweet_creation_date) "
-                 . "VALUES ('$this->u_id', '$this->u_name','$this->tweet_text', '$this->tweet_creation_date')";
+            $sql = "INSERT INTO Tweet (user_id, user_name, tweet_text, tweet_creation_date) "
+                 . "VALUES ('$this->user_id', '$this->user_name','$this->tweet_text', '$this->tweet_creation_date')";
             
             $result = $connection->query($sql);
             
@@ -86,22 +86,24 @@ class Tweet{
     public function showTweetAsHTML(){
 
         // przypisuje wlasciwosci obiektu do zmiennych
-        $u_name = $this->getUserName();
+        $user_id = $this->getUserId();
+        $user_name = "<a href=\"user.php?id=$user_id\">".$this->getUserName()."</a>";
         $tweet_text = $this->getText();
         $tweet_date = $this->getDate();
 
         // wyswietlam tweet'a
-        echo "<div name=\"tweet\" style=\"width: 900px; height: 80px; "
-           . "background-color: green; border: 5px solid black;\">";
-        echo "<strong>Tweet&nbsp;uzytkownika:</strong>&nbsp;$u_name<br>";
-        echo "<strong>Tresc&nbsp;tweet'u:</strong>&nbsp;$tweet_text<br>";
-        echo "<strong>Data&nbsp;stworzenia tweet'u:</strong>&nbsp;$tweet_date";
-        echo "</div><br>";
+echo<<<EOT
+        <div name="tweet" style="width: 900px; height: 80px; background-color: green; border: 5px solid black;">
+            <strong>Tweet uzytkownika: </strong>$user_name<br>
+            <strong>Tresc tweet'u: </strong>$tweet_text<br>
+            <strong>Data stworzenia tweet'u: </strong>$tweet_date
+        </div><br>
+EOT;
 
     }
     
     static public function loadAllTweets(mysqli $connection){
-        $sql = "SELECT * FROM Tweet";
+        $sql = "SELECT * FROM Tweet ORDER BY tweet_creation_date DESC";
         
         $arr =[];
         
@@ -111,8 +113,8 @@ class Tweet{
             foreach($result as $row){
                 $loadedTweet = new Tweet();
                 $loadedTweet->tweet_id = $row['tweet_id'];
-                $loadedTweet->u_id = $row['u_id'];
-                $loadedTweet->u_name = $row['u_name'];
+                $loadedTweet->user_id = $row['user_id'];
+                $loadedTweet->user_name = $row['user_name'];
                 $loadedTweet->tweet_text = $row['tweet_text'];
                 $loadedTweet->tweet_creation_date = $row['tweet_creation_date'];
                 
@@ -134,8 +136,8 @@ class Tweet{
             $row = $result->fetch_assoc();
             $loadedTweet = new Tweet();
             $loadedTweet->tweet_id = $row['tweet_id'];
-            $loadedTweet->u_id = $row['u_id'];
-            $loadedTweet->u_name = $row['u_name'];
+            $loadedTweet->user_id = $row['user_id'];
+            $loadedTweet->user_name = $row['user_name'];
             $loadedTweet->tweet_text = $row['tweet_text'];
             $loadedTweet->tweet_creation_date = $row['tweet_creation_date'];
             
@@ -147,7 +149,7 @@ class Tweet{
     }
     
     static public function loadAllTweetsByUserId(mysqli $conn, $user_id){
-        $sql = "SELECT * FROM Tweet WHERE u_id ='$user_id'";
+        $sql = "SELECT * FROM Tweet WHERE user_id ='$user_id' ORDER BY tweet_creation_date DESC";
         
         $arr =[];
         
@@ -157,15 +159,15 @@ class Tweet{
             foreach($result as $row){
                 $loadedTweet = new Tweet();
                 $loadedTweet->tweet_id = $row['tweet_id'];
-                $loadedTweet->u_id = $row['u_id'];
-                $loadedTweet->u_name = $row['u_name'];
+                $loadedTweet->user_id = $row['user_id'];
+                $loadedTweet->user_name = $row['user_name'];
                 $loadedTweet->tweet_text = $row['tweet_text'];
                 $loadedTweet->tweet_creation_date = $row['tweet_creation_date'];
                 
                 $arr[] = $loadedTweet;
             }
         }else{
-            echo "Brak Tweet'ow nalezacych do danego User'a";
+            echo "Nie masz zadnych tweet'ow! ";
         }
         return $arr;
     }
