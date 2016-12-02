@@ -44,6 +44,7 @@ if($_SERVER['REQUEST_METHOD'] == "POST" && isset($_POST['submit'])){
                 
                 // przekierowywuje do strony glownej
                 header("Location: index.php");
+                exit();
             }else{
                 
                 // jesli nie to generuje wiadomosc o bledzie logowania 

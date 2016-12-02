@@ -1,5 +1,7 @@
 <?php
 
+// w razie przyjcia odpowiedniego powiadomienia wyswietlam je w skrypcie 
+// i usuwam dana zmienna z pamieci
 if(isset($_SESSION['index_reminder'])){
     echo $_SESSION['index_reminder'];
     unset($_SESSION['index_reminder']);

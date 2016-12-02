@@ -69,6 +69,7 @@ if($_SERVER['REQUEST_METHOD'] == "POST" && isset($_POST['submit'])){
 
                 // przekierowuje do strony glownej
                 header("Location: index.php");
+                exit();
             }else{
                 
                 // gdyby zapis sie nie udal to tworze komunikat 
